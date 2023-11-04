@@ -1,15 +1,20 @@
 package com.example.nmd.service.order;
 
+import com.example.nmd.dto.entity.OrderItemDTO;
 import com.example.nmd.dto.request.CreateOrderRequest;
 import com.example.nmd.dto.request.OrderItemRequest;
 import com.example.nmd.model.Order;
+import com.example.nmd.model.OrderItem;
 import com.example.nmd.model.Product;
+import com.example.nmd.repository.OrderItemRepository;
 import com.example.nmd.repository.OrderRepository;
 import com.example.nmd.repository.ProductRepository;
 import com.example.nmd.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -22,9 +27,11 @@ public class OrderServiceImplm implements Orderservice {
     private final ProductRepository productRepository;
     private final OrderRepository orderRepository;
     private final ProductService productService;
+    private final OrderItemRepository orderItemRepository;
 
     @Override
     public Order createOrder(CreateOrderRequest createOrderRequest) {
+        List<OrderItem> orderItems = new ArrayList<>() ;
         float totalValue = 0.f;
         Order order = Order.builder()
                 .email(createOrderRequest.getEmail())
@@ -36,12 +43,16 @@ public class OrderServiceImplm implements Orderservice {
                 .status(createOrderRequest.getStatus()).build();
 
         for (OrderItemRequest item : createOrderRequest.getListOrderItemReq()) {
+            OrderItem orderItem = OrderItem.builder().quantity(item.getQuantity())
+                            .order(order).build();
+            orderItems.add(orderItem);
             order.setQuantity(order.getQuantity() + item.getQuantity());
-            Product product = productService.getProductById(item.getProductId());
+            Product product = productRepository.findById(item.getProduct_id()).orElseThrow(() -> new RuntimeException("Không tìm thấy id sản phẩm"));
             totalValue += item.getQuantity() * product.getPrice();
         }
         order.setTotalValueOrder(totalValue);
         orderRepository.save(order);
+        orderItemRepository.saveAll(orderItems);
 
         return order;
     }
@@ -58,12 +69,12 @@ public class OrderServiceImplm implements Orderservice {
     }
 
     @Override
-    public Order getById(long id) {
-        Optional<Order> order = orderRepository.findById(id);
-        if(!order.isPresent()){
-            throw  new RuntimeException("Không tồn tại id bạn vừa tìm");
-        }
-      return   orderRepository.save(order.get());
+    public ResponseEntity<?> getById(long id) {
+       Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("không tìm thấy id"));
+
+
+
+      return  ResponseEntity.ok(order);
     }
 
     @Override
@@ -79,5 +90,17 @@ public class OrderServiceImplm implements Orderservice {
         }
         orderRepository.delete(order.get());
         return   order.get();
+    }
+
+  public ResponseEntity<?> getOrderItemByOrderId (Long id){
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Khong tim thay id"));
+        List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
+        for(OrderItem orderItem : order.getOrderItems()){
+            Optional<Product> product = productRepository.findById(orderItem.getId());
+            OrderItemDTO orderItemDTO =  OrderItemDTO.builder().product(product.get()).quantity(orderItem.getQuantity()).build();
+
+            orderItemDTOS.add(orderItemDTO);
+        }
+        return ResponseEntity.ok().body( orderItemDTOS);
     }
 }

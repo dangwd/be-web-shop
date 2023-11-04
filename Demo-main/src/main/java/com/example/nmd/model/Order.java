@@ -1,5 +1,6 @@
 package com.example.nmd.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -46,8 +47,10 @@ public class Order {
     @Column(name = "name")
     private String name;
 
-//    @OneToMany(mappedBy = "order")
-//    private List<OrderItem> orderItems ;
+    @OneToMany(mappedBy = "order")
+    @JsonIgnore
+    private List<OrderItem> orderItems;
+
 
 
 

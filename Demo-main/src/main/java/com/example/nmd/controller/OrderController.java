@@ -21,9 +21,13 @@ public class OrderController {
         return BaseResponse.successData(orderservice.updateOrder(request));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public BaseResponse getOrderById(@PathVariable long id){
         return BaseResponse.successData(orderservice.getById(id));
+    }
+    @GetMapping("/order-item/{id}")
+    public BaseResponse getOrderItemByOrderId(@PathVariable long id){
+        return BaseResponse.successData(orderservice.getOrderItemByOrderId(id));
     }
 
     @GetMapping("all")
