@@ -12,11 +12,11 @@ public interface Orderservice {
     Order createOrder(CreateOrderRequest createOrderRequest);
     Order updateOrder(CreateOrderRequest createOrderRequest);
 
-    ResponseEntity<?> getById(long id);
+    ResponseEntity<?> getById(Long id);
 
     List<Order> getAllOrder();
 
-    Order deleteOrderById(long id);
+    Order deleteOrderById(Long id);
 
 
 ResponseEntity<?> getOrderItemByOrderId (Long id);

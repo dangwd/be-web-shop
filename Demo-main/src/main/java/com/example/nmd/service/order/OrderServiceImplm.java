@@ -69,10 +69,8 @@ public class OrderServiceImplm implements Orderservice {
     }
 
     @Override
-    public ResponseEntity<?> getById(long id) {
+    public ResponseEntity<?> getById(Long id) {
        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("không tìm thấy id"));
-
-
 
       return  ResponseEntity.ok(order);
     }
@@ -83,7 +81,7 @@ public class OrderServiceImplm implements Orderservice {
     }
 
     @Override
-    public Order deleteOrderById(long id) {
+    public Order deleteOrderById(Long id) {
         Optional<Order> order = orderRepository.findById(id);
         if(!order.isPresent()){
             throw  new RuntimeException("Không tồn tại id bạn vừa tìm");
