@@ -47,7 +47,7 @@ public class OrderServiceImplm implements Orderservice {
                             .order(order).build();
             orderItems.add(orderItem);
             order.setQuantity(order.getQuantity() + item.getQuantity());
-            Product product = productRepository.findById(item.getProduct_id()).orElseThrow(() -> new RuntimeException("Không tìm thấy id sản phẩm"));
+            Product product = productRepository.findById(item.getProductId()).orElseThrow(() -> new RuntimeException("Không tìm thấy id sản phẩm"));
             totalValue += item.getQuantity() * product.getPrice();
         }
         order.setTotalValueOrder(totalValue);
@@ -96,8 +96,9 @@ public class OrderServiceImplm implements Orderservice {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Khong tim thay id"));
         List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
         for(OrderItem orderItem : order.getOrderItems()){
-            Optional<Product> product = productRepository.findById(orderItem.getId());
-            OrderItemDTO orderItemDTO =  OrderItemDTO.builder().product(product.get()).quantity(orderItem.getQuantity()).build();
+            Product product = productRepository.findById(orderItem.getId()).orElseThrow(() -> new RuntimeException("không tìm thấy id sản phẩm"));
+
+            OrderItemDTO orderItemDTO =  OrderItemDTO.builder().product(product).quantity(orderItem.getQuantity()).build();
 
             orderItemDTOS.add(orderItemDTO);
         }

@@ -18,6 +18,6 @@ public interface Orderservice {
 
     Order deleteOrderById(long id);
 
-//    ResponseEntity<?> detailOrder
+
 ResponseEntity<?> getOrderItemByOrderId (Long id);
  }
