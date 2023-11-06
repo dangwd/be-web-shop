@@ -22,11 +22,11 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public BaseResponse getOrderById(@PathVariable long id){
+    public BaseResponse getOrderById(@PathVariable String id){
         return BaseResponse.successData(orderservice.getById(id));
     }
     @GetMapping("/order-item/{id}")
-    public BaseResponse getOrderItemByOrderId(@PathVariable Long id){
+    public BaseResponse getOrderItemByOrderId(@PathVariable String id){
         return BaseResponse.successData(orderservice.getOrderItemByOrderId(id));
     }
 
@@ -36,7 +36,7 @@ public class OrderController {
     }
 
     @DeleteMapping("del/{id}")
-    public BaseResponse deleteOrder(@PathVariable long id){
+    public BaseResponse deleteOrder(@PathVariable String id){
         return
                 BaseResponse.successData(orderservice.deleteOrderById(id));
     }

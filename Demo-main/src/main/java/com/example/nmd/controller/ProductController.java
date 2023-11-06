@@ -30,7 +30,7 @@ public class ProductController {
     }
 
     @GetMapping("{id}")
-    public BaseResponse getProductById (@PathVariable long id){
+    public BaseResponse getProductById (@PathVariable String id){
         return BaseResponse.successData(productService.getProductById(id));
     }
     @GetMapping("all")
@@ -39,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping("del/{id}")
-    public BaseResponse deleteProduct (@PathVariable long id){
+    public BaseResponse deleteProduct (@PathVariable String id){
         return BaseResponse.successData(productService.deleteProduct(id));
     }
 

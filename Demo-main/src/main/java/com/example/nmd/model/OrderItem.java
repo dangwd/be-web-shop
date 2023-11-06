@@ -15,12 +15,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "order_item")
 public class OrderItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
+    private String id ;
     private int quantity ;
     @ManyToOne
     @JoinColumn(name = "order_id", updatable = true)
     @JsonIgnore
     private Order order;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Product product ;
 
 }

@@ -8,7 +8,7 @@ import java.util.Date;
 public class CreateProductRequest {
 
     private String image;
-    private long id ;
+    private String id ;
     private String productName;
     private String description;
     private String type;

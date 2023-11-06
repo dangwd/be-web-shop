@@ -14,11 +14,11 @@ public interface ProductService {
     Product createProduct(CreateProductRequest request);
     Product updateProduct(CreateProductRequest request);
 
-    Product getProductById (long id );
+    Product getProductById (String id );
 
     List<Product> getAllProduct();
 
-    Product deleteProduct(long id);
+    Product deleteProduct(String id);
 
 
 

@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Entity
@@ -20,9 +21,8 @@ import java.util.List;
 @Data
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Long orderId;
+    private String orderId = UUID.randomUUID().toString();
 
     @Column(name = "quantity")
     private int quantity;

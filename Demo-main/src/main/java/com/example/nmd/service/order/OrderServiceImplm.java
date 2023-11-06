@@ -11,13 +11,12 @@ import com.example.nmd.repository.OrderRepository;
 import com.example.nmd.repository.ProductRepository;
 import com.example.nmd.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,12 +27,14 @@ public class OrderServiceImplm implements Orderservice {
     private final OrderRepository orderRepository;
     private final ProductService productService;
     private final OrderItemRepository orderItemRepository;
+    private final ModelMapper mapper ;
 
     @Override
     public Order createOrder(CreateOrderRequest createOrderRequest) {
         List<OrderItem> orderItems = new ArrayList<>() ;
         float totalValue = 0.f;
         Order order = Order.builder()
+                .orderId(UUID.randomUUID().toString())
                 .email(createOrderRequest.getEmail())
                 .name(createOrderRequest.getName())
                 .orderCreationDate(new Date())
@@ -43,7 +44,7 @@ public class OrderServiceImplm implements Orderservice {
                 .status(createOrderRequest.getStatus()).build();
 
         for (OrderItemRequest item : createOrderRequest.getListOrderItemReq()) {
-            OrderItem orderItem = OrderItem.builder().quantity(item.getQuantity())
+            OrderItem orderItem = OrderItem.builder().quantity(item.getQuantity()).id(UUID.randomUUID().toString())
                             .order(order).build();
             orderItems.add(orderItem);
             order.setQuantity(order.getQuantity() + item.getQuantity());
@@ -69,7 +70,7 @@ public class OrderServiceImplm implements Orderservice {
     }
 
     @Override
-    public ResponseEntity<?> getById(Long id) {
+    public ResponseEntity<?> getById(String id) {
        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("không tìm thấy id"));
 
       return  ResponseEntity.ok(order);
@@ -81,25 +82,32 @@ public class OrderServiceImplm implements Orderservice {
     }
 
     @Override
-    public Order deleteOrderById(Long id) {
+    public Order deleteOrderById(String id) {
         Optional<Order> order = orderRepository.findById(id);
         if(!order.isPresent()){
             throw  new RuntimeException("Không tồn tại id bạn vừa tìm");
         }
+        orderItemRepository.deleteAll(order.get().getOrderItems());
         orderRepository.delete(order.get());
         return   order.get();
     }
 
-  public ResponseEntity<?> getOrderItemByOrderId (Long id){
+  public ResponseEntity<?> getOrderItemByOrderId (String id){
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Khong tim thay id"));
         List<OrderItemDTO> orderItemDTOS = new ArrayList<>();
-        for(OrderItem orderItem : order.getOrderItems()){
-            Product product = productRepository.findById(orderItem.getId()).orElseThrow(() -> new RuntimeException("không tìm thấy id sản phẩm"));
+//        for(OrderItem orderItem : order.getOrderItems()){
+//
+//            OrderItemDTO orderItemDTO =  OrderItemDTO.builder().product(orderItem.getProduct()).quantity(orderItem.getQuantity()).build();
+//
+//            orderItemDTOS.add(orderItemDTO);
+//        }
+//        return ResponseEntity.ok().body( orderItemDTOS);
+//      order.getOrderItems().stream().map(i ->{
+//
+//          orderItemDTOS.add()
+//      } ).collect(Collectors.toList());
 
-            OrderItemDTO orderItemDTO =  OrderItemDTO.builder().product(product).quantity(orderItem.getQuantity()).build();
-
-            orderItemDTOS.add(orderItemDTO);
-        }
-        return ResponseEntity.ok().body( orderItemDTOS);
+        return ResponseEntity.ok().body(order.getOrderItems().stream().map(i -> i.getProduct()));
     }
+
 }

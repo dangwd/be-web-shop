@@ -11,7 +11,7 @@ public class CreateOrderRequest {
 
 
     private String addr;
-    private long id ;
+    private String id ;
 
     private String email;
 

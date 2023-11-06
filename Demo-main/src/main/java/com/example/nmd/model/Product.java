@@ -2,7 +2,7 @@ package com.example.nmd.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,9 +24,8 @@ import java.util.List;
 
 public class Product {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "product_id")
-    private Long productId ;
+    private String productId ;
 
     @Column
     private float price ;
@@ -42,6 +41,11 @@ public class Product {
     private Date createTime ;
     @Column
     private long quantityInStore = 0;
+    @OneToMany(mappedBy = "product")
+    @JsonIgnore
+    private List<OrderItem> orderItems;
+
+
 
 
 

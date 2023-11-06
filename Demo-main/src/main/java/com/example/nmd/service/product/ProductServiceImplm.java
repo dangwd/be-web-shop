@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class ProductServiceImplm implements ProductService{
     @Override
     public Product createProduct(CreateProductRequest request) {
         Product product = Product.builder().productName(request.getProductName())
+                .productId(UUID.randomUUID().toString())
                 .createTime(new Date())
                 .price(request.getPrice())
                 .description(request.getDescription())
@@ -54,7 +56,7 @@ public class ProductServiceImplm implements ProductService{
     }
 
     @Override
-    public Product getProductById(long id) {
+    public Product getProductById(String id) {
         Optional<Product> product = productRepository.findById(id);
         if(!product.isPresent()){
             throw new RuntimeException("KHông tìm thấy id của sản phẩm");
@@ -68,7 +70,7 @@ public class ProductServiceImplm implements ProductService{
     }
 
     @Override
-    public Product deleteProduct(long id) {
+    public Product deleteProduct(String id) {
         Optional<Product> product = productRepository.findById(id);
         if(!product.isPresent()){
             throw new RuntimeException("KHông tìm thấy id của sản phẩm");
