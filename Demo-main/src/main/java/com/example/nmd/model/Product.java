@@ -33,7 +33,8 @@ public class Product {
     private String image;
     @Column(name = "product_name")
     private  String productName;
-    @Column
+    @Column(columnDefinition = "text")
+
     private String description ;
     @Column(name = "type")
     private String type ;

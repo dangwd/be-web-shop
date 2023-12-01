@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("banner/")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class BannerController {
     private final BannerService bannerService ;
     @PostMapping("create")
@@ -28,5 +29,9 @@ public class BannerController {
     @DeleteMapping("del/{id}")
     public BaseResponse deleteByOd (@PathVariable long id){
         return BaseResponse.successData(bannerService.deleteBanner(id));
+    }
+    @GetMapping("all")
+    public BaseResponse getAll (){
+        return  BaseResponse.successListData(bannerService.getAllBanner() , bannerService.getAllBanner().size());
     }
 }

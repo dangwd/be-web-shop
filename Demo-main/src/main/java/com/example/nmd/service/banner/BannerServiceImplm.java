@@ -4,6 +4,7 @@ import com.example.nmd.dto.request.CreateBanner;
 import com.example.nmd.model.Banner;
 import com.example.nmd.repository.BannerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,5 +52,10 @@ public class BannerServiceImplm implements BannerService{
     @Override
     public List<Banner> getAllBannerByType(String type) {
         return bannerRepository.findBannersByType(type);
+    }
+
+    @Override
+    public List<Banner> getAllBanner() {
+        return bannerRepository.findAll();
     }
 }
