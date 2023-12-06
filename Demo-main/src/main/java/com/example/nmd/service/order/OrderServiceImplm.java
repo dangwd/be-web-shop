@@ -45,6 +45,8 @@ public class OrderServiceImplm implements Orderservice {
 
         for (OrderItemRequest item : createOrderRequest.getListOrderItemReq()) {
             Product product = productRepository.findById(item.getProductId()).orElseThrow(() -> new RuntimeException("Không tìm thấy id sản phẩm"));
+            product.setQuantityInStore(product.getQuantityInStore() - item.getQuantity());
+
             OrderItem orderItem = OrderItem.builder().quantity(item.getQuantity()).id(UUID.randomUUID().toString())
                     .product(product)
                     .order(order).build();
