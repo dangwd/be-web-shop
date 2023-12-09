@@ -2,16 +2,21 @@ package com.example.nmd.service.order;
 
 import com.example.nmd.dto.entity.OrderItemDTO;
 import com.example.nmd.dto.request.CreateOrderRequest;
+import com.example.nmd.dto.request.FilterOrderRequest;
 import com.example.nmd.dto.request.OrderItemRequest;
+import com.example.nmd.dto.response.BaseListResponse;
 import com.example.nmd.model.Order;
 import com.example.nmd.model.OrderItem;
 import com.example.nmd.model.Product;
+import com.example.nmd.repository.CustomOrderRepository;
 import com.example.nmd.repository.OrderItemRepository;
 import com.example.nmd.repository.OrderRepository;
 import com.example.nmd.repository.ProductRepository;
 import com.example.nmd.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -106,4 +111,13 @@ public class OrderServiceImplm implements Orderservice {
         return ResponseEntity.ok().body(order.getOrderItems().stream().map(i -> mapper.map(i , OrderItemDTO.class)));
     }
 
+    @Override
+    public ResponseEntity<?> filterOrderByCondition(FilterOrderRequest request) {
+        Specification<Order> orderSpecification = CustomOrderRepository.filterSpecification(request);
+        List<Order> orders = orderRepository.findAll(orderSpecification) ;
+        BaseListResponse<Order> baseListResponse = new BaseListResponse<>();
+        baseListResponse.setSuccess(true);
+        baseListResponse.setResult(orders , orders.size());
+        return ResponseEntity.ok().body(baseListResponse);
+    }
 }

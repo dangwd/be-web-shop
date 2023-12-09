@@ -1,6 +1,7 @@
 package com.example.nmd.service.order;
 
 import com.example.nmd.dto.request.CreateOrderRequest;
+import com.example.nmd.dto.request.FilterOrderRequest;
 import com.example.nmd.model.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -20,4 +21,5 @@ public interface Orderservice {
 
 
 ResponseEntity<?> getOrderItemByOrderId (String id);
+ResponseEntity<?> filterOrderByCondition(FilterOrderRequest request) ;
  }

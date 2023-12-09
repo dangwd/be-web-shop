@@ -1,9 +1,11 @@
 package com.example.nmd.controller;
 
 import com.example.nmd.dto.request.CreateOrderRequest;
+import com.example.nmd.dto.request.FilterOrderRequest;
 import com.example.nmd.dto.response.BaseResponse;
 import com.example.nmd.service.order.Orderservice;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -39,6 +41,11 @@ public class OrderController {
     public BaseResponse deleteOrder(@PathVariable String id){
         return
                 BaseResponse.successData(orderservice.deleteOrderById(id));
+    }
+
+    @PostMapping("filter")
+    public ResponseEntity<?> filterByCondition (@RequestBody FilterOrderRequest request){
+        return orderservice.filterOrderByCondition(request);
     }
 
 
